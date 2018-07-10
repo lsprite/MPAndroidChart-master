@@ -1,7 +1,6 @@
 package com.github.mikephil.charting.data;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 /**
@@ -12,20 +11,17 @@ public class PieEntry extends Entry {
 
     private String label;
 
+    /**
+     * 用来标记是否显示描述文字
+     */
+    private boolean display = true;
+
     public PieEntry(float value) {
         super(0f, value);
     }
 
     public PieEntry(float value, Object data) {
         super(0f, value, data);
-    }
-
-    public PieEntry(float value, Drawable icon) {
-        super(0f, value, icon);
-    }
-
-    public PieEntry(float value, Drawable icon, Object data) {
-        super(0f, value, icon, data);
     }
 
     public PieEntry(float value, String label) {
@@ -38,14 +34,17 @@ public class PieEntry extends Entry {
         this.label = label;
     }
 
-    public PieEntry(float value, String label, Drawable icon) {
-        super(0f, value, icon);
+    /**
+     * 当传数据过小，调用此方法不显示文字
+     *
+     * @param value
+     * @param label
+     * @param display
+     */
+    public PieEntry(float value, String label, boolean display) {
+        super(0f, value);
         this.label = label;
-    }
-
-    public PieEntry(float value, String label, Drawable icon, Object data) {
-        super(0f, value, icon, data);
-        this.label = label;
+        this.display = display;
     }
 
     /**
@@ -61,8 +60,26 @@ public class PieEntry extends Entry {
         return label;
     }
 
+    /**
+     * 文字绘制时用到做判断
+     *
+     * @return
+     */
+    public boolean isDisplay() {
+        return display;
+    }
+
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    /**
+     * 设置display值，达到控制是否显示文字
+     *
+     * @param display
+     */
+    public void setDisplay(boolean display) {
+        this.display = display;
     }
 
     @Deprecated

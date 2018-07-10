@@ -113,7 +113,7 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setTextSize(mXAxis.getTextSize());
         mAxisLabelPaint.setColor(mXAxis.getTextColor());
 
-        MPPointF pointF = MPPointF.getInstance(0,0);
+        MPPointF pointF = MPPointF.getInstance(0, 0);
         if (mXAxis.getPosition() == XAxisPosition.TOP) {
             pointF.x = 0.5f;
             pointF.y = 1.0f;
@@ -228,10 +228,38 @@ public class XAxisRenderer extends AxisRenderer {
     }
 
     protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
-        Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisLabelPaint, anchor, angleDegrees);
+//        Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisLabelPaint, anchor, angleDegrees);
+        float labelHeight = mXAxis.getTextSize();
+        float labelInterval = mXAxis.getTextSize() / 3;
+        String[] labels = formattedLabel.split("\n");
+
+        Paint mFirstLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mFirstLinePaint.setColor(mAxisLabelPaint.getColor());
+        mFirstLinePaint.setTextAlign(Align.CENTER);
+        mFirstLinePaint.setTextSize(mXAxis.getTextSize());
+        mFirstLinePaint.setTypeface(mXAxis.getTypeface());
+
+        Paint mSecondLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mSecondLinePaint.setColor(mAxisLabelPaint.getColor());
+        mSecondLinePaint.setTextAlign(Align.CENTER);
+        mSecondLinePaint.setTextSize(mXAxis.getTextSize());
+        mSecondLinePaint.setTypeface(mXAxis.getTypeface());
+
+        if (labels.length > 1) {
+            Utils.drawXAxisValue(c, labels[0], x, y, mFirstLinePaint, anchor, angleDegrees);
+            String ll = "";
+            for (int i = 1; i < labels.length; i++) {
+                ll = ll + labels[i];
+            }
+            Utils.drawXAxisValue(c, ll, x, y + labelHeight + labelInterval, mSecondLinePaint, anchor, angleDegrees);
+        } else {
+            Utils.drawXAxisValue(c, formattedLabel, x, y, mFirstLinePaint, anchor, angleDegrees);
+        }
     }
+
     protected Path mRenderGridLinesPath = new Path();
     protected float[] mRenderGridLinesBuffer = new float[2];
+
     @Override
     public void renderGridLines(Canvas c) {
 
@@ -241,7 +269,7 @@ public class XAxisRenderer extends AxisRenderer {
         int clipRestoreCount = c.save();
         c.clipRect(getGridClippingRect());
 
-        if(mRenderGridLinesBuffer.length != mAxis.mEntryCount * 2){
+        if (mRenderGridLinesBuffer.length != mAxis.mEntryCount * 2) {
             mRenderGridLinesBuffer = new float[mXAxis.mEntryCount * 2];
         }
         float[] positions = mRenderGridLinesBuffer;

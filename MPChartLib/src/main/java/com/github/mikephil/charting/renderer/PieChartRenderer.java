@@ -539,44 +539,50 @@ public class PieChartRenderer extends DataRenderer {
                         labelPtx = pt2x + offset;
                         labelPty = pt2y;
                     }
+                    /**
+                     * 这里是绘制圈外线所以须添加
+                     */
+                    if (entry.isDisplay()) {
+                        if (dataSet.getValueLineColor() != ColorTemplate.COLOR_NONE) {
 
-                    if (dataSet.getValueLineColor() != ColorTemplate.COLOR_NONE) {
-
-                        if (dataSet.isUsingSliceColorAsValueLineColor()) {
-                            mValueLinePaint.setColor(dataSet.getColor(j));
-                            if (dataSet.isUsingSliceColorAsXValueColor() && drawXOutside) {
-                                mEntryLabelsPaint.setColor(dataSet.getColor(j));
+                            if (dataSet.isUsingSliceColorAsValueLineColor()) {
+                                mValueLinePaint.setColor(dataSet.getColor(j));
+                                if (dataSet.isUsingSliceColorAsXValueColor() && drawXOutside) {
+                                    mEntryLabelsPaint.setColor(dataSet.getColor(j));
+                                }
                             }
+
+                            c.drawLine(pt0x, pt0y, pt1x, pt1y, mValueLinePaint);
+                            c.drawLine(pt1x, pt1y, pt2x, pt2y, mValueLinePaint);
                         }
-
-                        c.drawLine(pt0x, pt0y, pt1x, pt1y, mValueLinePaint);
-                        c.drawLine(pt1x, pt1y, pt2x, pt2y, mValueLinePaint);
                     }
-
                     // draw everything, depending on settings
                     if (drawXOutside && drawYOutside) {
+                        if (entry.isDisplay()) {
+                            drawValue(c,
+                                    formatter,
+                                    value,
+                                    entry,
+                                    0,
+                                    labelPtx,
+                                    labelPty,
+                                    dataSet.getValueTextColor(j));
 
-                        drawValue(c,
-                                formatter,
-                                value,
-                                entry,
-                                0,
-                                labelPtx,
-                                labelPty,
-                                dataSet.getValueTextColor(j));
-
-                        if (j < data.getEntryCount() && entry.getLabel() != null) {
-                            drawEntryLabel(c, entry.getLabel(), labelPtx, labelPty + lineHeight);
+                            if (j < data.getEntryCount() && entry.getLabel() != null) {
+                                drawEntryLabel(c, entry.getLabel(), labelPtx, labelPty + lineHeight);
+                            }
                         }
-
                     } else if (drawXOutside) {
-                        if (j < data.getEntryCount() && entry.getLabel() != null) {
-                            drawEntryLabel(c, entry.getLabel(), labelPtx, labelPty + lineHeight / 2.f);
+                        if (entry.isDisplay()) {
+                            if (j < data.getEntryCount() && entry.getLabel() != null) {
+                                drawEntryLabel(c, entry.getLabel(), labelPtx, labelPty + lineHeight / 2.f);
+                            }
                         }
                     } else if (drawYOutside) {
-
-                        drawValue(c, formatter, value, entry, 0, labelPtx, labelPty + lineHeight / 2.f, dataSet
-                                .getValueTextColor(j));
+                        if (entry.isDisplay()) {
+                            drawValue(c, formatter, value, entry, 0, labelPtx, labelPty + lineHeight / 2.f, dataSet
+                                    .getValueTextColor(j));
+                        }
                     }
                 }
 

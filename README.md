@@ -1,5 +1,11 @@
 原网址https://github.com/PhilJay/MPAndroidChart
+**新增功能**
+- ** 饼图valueLineColor **
 PieDataSet添加setUsingSliceColorAsXValueColor();//当把xvalue画在外部时候，字体颜色和块颜色相同，参照setUsingSliceColorAsValueLineColor()方法修改
+
+- ** x轴坐标文字支持换行 **
+修改 XAxisRenderer.drawLabel()里的方法(用\n区分，暂时只能最多2行，要设置 barChart.setViewPortOffsets(100, 100, 100, 100);避免第二行文字被遮住)
+
 
 ![banner](https://raw.github.com/PhilJay/MPChart/master/design/feature_graphic_smaller.png)
 

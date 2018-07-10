@@ -19,10 +19,14 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  */
 public abstract class AxisRenderer extends Renderer {
 
-    /** base axis this axis renderer works with */
+    /**
+     * base axis this axis renderer works with
+     */
     protected AxisBase mAxis;
 
-    /** transformer to transform values to screen pixels and return */
+    /**
+     * transformer to transform values to screen pixels and return
+     */
     protected Transformer mTrans;
 
     /**
@@ -51,7 +55,7 @@ public abstract class AxisRenderer extends Renderer {
         this.mTrans = trans;
         this.mAxis = axis;
 
-        if(mViewPortHandler != null) {
+        if (mViewPortHandler != null) {
 
             mAxisLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -162,13 +166,19 @@ public abstract class AxisRenderer extends Renderer {
         }
 
         // Find out how much spacing (in y value space) between axis values
-        double rawInterval = range / labelCount;
-        double interval = Utils.roundToNextSignificant(rawInterval);
+        int rawInterval = (int) range / labelCount;
+        int interval = (int) Utils.roundToNextSignificant(rawInterval);
+//        double rawInterval = range / labelCount;
+//        double interval = Utils.roundToNextSignificant(rawInterval);
+
+        if (interval == 0) {
+            interval += 1;
+        }
 
         // If granularity is enabled, then do not allow the interval to go below specified granularity.
         // This is used to avoid repeated values when rounding values for display.
         if (mAxis.isGranularityEnabled())
-            interval = interval < mAxis.getGranularity() ? mAxis.getGranularity() : interval;
+            interval = interval < mAxis.getGranularity() ? (int) mAxis.getGranularity() : interval;
 
         // Normalize interval
         double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10, (int) Math.log10(interval)));
@@ -176,7 +186,7 @@ public abstract class AxisRenderer extends Renderer {
         if (intervalSigDigit > 5) {
             // Use one order of magnitude higher, to avoid intervals like 0.9 or
             // 90
-            interval = Math.floor(10 * intervalMagnitude);
+            interval = (int) Math.floor(10 * intervalMagnitude);
         }
 
         int n = mAxis.isCenterAxisLabelsEnabled() ? 1 : 0;
@@ -184,7 +194,7 @@ public abstract class AxisRenderer extends Renderer {
         // force label count
         if (mAxis.isForceLabelsEnabled()) {
 
-            interval = (float) range / (float) (labelCount - 1);
+            interval = (int) range / (int) (labelCount - 1);
             mAxis.mEntryCount = labelCount;
 
             if (mAxis.mEntries.length < labelCount) {
@@ -205,7 +215,7 @@ public abstract class AxisRenderer extends Renderer {
         } else {
 
             double first = interval == 0.0 ? 0.0 : Math.ceil(yMin / interval) * interval;
-            if(mAxis.isCenterAxisLabelsEnabled()) {
+            if (mAxis.isCenterAxisLabelsEnabled()) {
                 first -= interval;
             }
 
@@ -249,7 +259,7 @@ public abstract class AxisRenderer extends Renderer {
                 mAxis.mCenteredEntries = new float[n];
             }
 
-            float offset = (float)interval / 2f;
+            float offset = (float) interval / 2f;
 
             for (int i = 0; i < n; i++) {
                 mAxis.mCenteredEntries[i] = mAxis.mEntries[i] + offset;

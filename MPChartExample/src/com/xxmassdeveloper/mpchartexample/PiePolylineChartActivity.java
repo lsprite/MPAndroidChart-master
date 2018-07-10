@@ -66,7 +66,6 @@ public class PiePolylineChartActivity extends DemoBase implements
 
         mChart.setDrawCenterText(true);
 
-        mChart.setRotationAngle(0);
         // 触摸旋转
         mChart.setRotationEnabled(true);
         mChart.setHighlightPerTapEnabled(true);
